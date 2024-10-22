@@ -1,0 +1,49 @@
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+// ... (other data sources or models if applicable)
+
+model Student {
+  id        Int      @id @default(autoincrement())
+  name      String
+  email     String   @unique
+  rollNumber String   @unique
+  grade     Int
+  section   String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now())
+
+  // Relationships
+  courses   Course[]
+}
+
+model Course {
+  id          Int      @id @default(autoincrement())
+  name        String
+  description String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @default(now())
+
+  // Relationships
+  teacherId Int
+  students   Student[]
+  teacher    Teacher?  @relation(fields: [teacherId], references: [id])
+}
+
+model Teacher {
+  id        Int      @id @default(autoincrement())
+  name      String
+  email     String   @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now())
+
+  // Relationships
+  courses   Course[]
+}
